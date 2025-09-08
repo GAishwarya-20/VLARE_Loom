@@ -33,10 +33,10 @@ CommandMap cmdTable[] = {
 String bodyFile = "body.bmp";
 String borderFile = "border.bmp";
 
-uint32_t bodyTotalPicks   = 1000;
-uint32_t bodyCurrentPicks = 200;
-uint32_t borderTotalPicks = 500;
-uint32_t borderCurrentPicks = 50;
+uint32_t bodyTotalPicks   = 0;
+uint32_t bodyCurrentPicks = 0;
+uint32_t borderTotalPicks = 0;
+uint32_t borderCurrentPicks = 0;
 int currentRPM = 0;
 
 //======================================================================
@@ -112,8 +112,11 @@ bool parseStringCommand(const String &line, Packet &pkt) {
   } else if (cmdCode == 0x17) { // CMD_SET_RPM <value>
     pkt.data[0] = args.toInt();
     pkt.length  = 1;
+  } else if (cmdCode == 0x13 || cmdCode == 0x14 || cmdCode == 0x15) {
+    // no args
+    pkt.length = 0;
   } else {
-    // 0x13/0x14/0x15 have no args
+    return false;
   }
   return true;
 }
